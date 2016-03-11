@@ -2,19 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Mchan.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ConsumerKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">kR76BIm8q6O0fYD0xPOOfiQZw</Value>
-    </Setting>
-    <Setting Name="ConsumerSecret" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Ya8rkzafV5nTRaMUqyfIh5WkriPlvAVDhjVftSR5svbn2AZm0M</Value>
-    </Setting>
-    <Setting Name="AccessToken" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="AccessTokenSecret" Type="System.Collections.Specialized.StringCollection" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="UserListKey" Type="System.Int32" Scope="User">
+    <Setting Name="UserListIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>

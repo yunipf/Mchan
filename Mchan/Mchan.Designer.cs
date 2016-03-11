@@ -204,6 +204,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "Mchan";
             this.Text = "Mchan";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Mchan_FormClosed);
             this.Shown += new System.EventHandler(this.Mchan_Shown);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);

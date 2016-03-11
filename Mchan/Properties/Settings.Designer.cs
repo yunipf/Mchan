@@ -23,55 +23,15 @@ namespace Mchan.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("kR76BIm8q6O0fYD0xPOOfiQZw")]
-        public string ConsumerKey {
-            get {
-                return ((string)(this["ConsumerKey"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Ya8rkzafV5nTRaMUqyfIh5WkriPlvAVDhjVftSR5svbn2AZm0M")]
-        public string ConsumerSecret {
-            get {
-                return ((string)(this["ConsumerSecret"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection AccessToken {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["AccessToken"]));
-            }
-            set {
-                this["AccessToken"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection AccessTokenSecret {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["AccessTokenSecret"]));
-            }
-            set {
-                this["AccessTokenSecret"] = value;
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int UserListKey {
+        public int UserListIndex {
             get {
-                return ((int)(this["UserListKey"]));
+                return ((int)(this["UserListIndex"]));
             }
             set {
-                this["UserListKey"] = value;
+                this["UserListIndex"] = value;
             }
         }
     }

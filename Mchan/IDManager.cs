@@ -42,8 +42,10 @@ namespace Mchan
 
         private void addUserButton_Click(object sender, EventArgs e)
         {
-            string consumerKey = Properties.Settings.Default.ConsumerKey;
-            string consumerSecret = Properties.Settings.Default.ConsumerSecret;
+            var key = new KeyData();
+            string consumerKey = key.ConsumerKey;
+            string consumerSecret = key.ConsumerSecret;
+
             var session = OAuth.Authorize(consumerKey, consumerSecret);
             string url = session.AuthorizeUri.AbsoluteUri;
             System.Diagnostics.Process.Start(url);
@@ -59,7 +61,7 @@ namespace Mchan
                 string name = res.Name;
                 string accessToken = tokens.AccessToken;
                 string accessTokenSecret = tokens.AccessTokenSecret;
-
+                
                 UserData userData = new UserData(id, screenName, name, accessToken, accessTokenSecret);
                 DBAccess.DBInsert(userData);
                 userList = DBAccess.UserList;

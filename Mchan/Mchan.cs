@@ -22,6 +22,7 @@ namespace Mchan
 
             InitFileCheck();
             InitSetting = InitSettingCheck();
+            
 
         }
 
@@ -71,13 +72,21 @@ namespace Mchan
                 
             }
           
-            UserListUpdate();           
+            UserListUpdate();
+            userListPullDown.SelectedIndex = Properties.Settings.Default.UserListIndex;
         }
 
         private void managerButton_Click(object sender, EventArgs e)
         {
             new IDManager().ShowDialog();
             UserListUpdate();
+        }
+
+        private void Mchan_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            int userListIndex = userListPullDown.SelectedIndex;
+            Properties.Settings.Default.UserListIndex = userListIndex;
+            Properties.Settings.Default.Save();
         }
     }
 
