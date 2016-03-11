@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ConsumerKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">	kR76BIm8q6O0fYD0xPOOfiQZw</Value>
+      <Value Profile="(Default)">kR76BIm8q6O0fYD0xPOOfiQZw</Value>
     </Setting>
     <Setting Name="ConsumerSecret" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Ya8rkzafV5nTRaMUqyfIh5WkriPlvAVDhjVftSR5svbn2AZm0M</Value>

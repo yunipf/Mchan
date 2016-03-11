@@ -25,7 +25,7 @@ namespace Mchan.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\tkR76BIm8q6O0fYD0xPOOfiQZw")]
+        [global::System.Configuration.DefaultSettingValueAttribute("kR76BIm8q6O0fYD0xPOOfiQZw")]
         public string ConsumerKey {
             get {
                 return ((string)(this["ConsumerKey"]));

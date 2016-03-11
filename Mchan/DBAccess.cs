@@ -92,7 +92,7 @@ namespace Mchan
                 {
                     using (SQLiteCommand command = conn.CreateCommand())
                     {
-                        command.CommandText = "insert into user (id,screenName,name,accessToken,accessTokenSecret) values('" + userData.Id + "','" + userData.ScreenName + "','" + userData.Name + "','" + userData.AccessToken + "','" + userData.AccessTokenSecret + ")";
+                        command.CommandText = "insert into user (id,screenName,name,accessToken,accessTokenSecret) values('" + userData.Id + "','" + userData.ScreenName + "','" + userData.Name + "','" + userData.AccessToken + "','" + userData.AccessTokenSecret + "')";
                         command.ExecuteNonQuery();                      
                     }
                     sqlt.Commit();

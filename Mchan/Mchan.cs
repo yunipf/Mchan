@@ -59,7 +59,7 @@ namespace Mchan
         {
             userList = DBAccess.UserList;
             userListPullDown.DisplayMember = "ScreenName";
-            userListPullDown.DataSource = userList.Values;
+            userListPullDown.DataSource = userList.Values.ToList();
         }
 
 

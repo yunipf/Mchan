@@ -27,7 +27,7 @@ namespace Mchan
         private void ListBoxUpdate()
         {
             userListBox.DisplayMember = "ScreenName";
-            userListBox.DataSource = userList.Values;
+            userListBox.DataSource = userList.Values.ToList();
         }
 
         private void IDManager_Load(object sender, EventArgs e)
