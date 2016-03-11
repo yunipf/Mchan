@@ -39,17 +39,22 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.playerList = new System.Windows.Forms.ListBox();
             this.closeButton = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // userListPullDown
             // 
+            this.userListPullDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.userListPullDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.userListPullDown.FormattingEnabled = true;
-            this.userListPullDown.Location = new System.Drawing.Point(95, 10);
+            this.userListPullDown.Location = new System.Drawing.Point(91, 10);
             this.userListPullDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.userListPullDown.Name = "userListPullDown";
             this.userListPullDown.Size = new System.Drawing.Size(136, 20);
             this.userListPullDown.TabIndex = 6;
+            this.userListPullDown.TextChanged += new System.EventHandler(this.userListPullDown_TextChanged);
             // 
             // managerButton
             // 
@@ -67,7 +72,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 13);
+            this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(54, 12);
@@ -90,7 +95,7 @@
             // 
             this.hostButton.BackColor = System.Drawing.Color.DimGray;
             this.hostButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.hostButton.Location = new System.Drawing.Point(16, 239);
+            this.hostButton.Location = new System.Drawing.Point(7, 197);
             this.hostButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.hostButton.Name = "hostButton";
             this.hostButton.Size = new System.Drawing.Size(54, 23);
@@ -102,7 +107,7 @@
             // 
             this.replyButton.BackColor = System.Drawing.Color.DimGray;
             this.replyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.replyButton.Location = new System.Drawing.Point(155, 237);
+            this.replyButton.Location = new System.Drawing.Point(139, 195);
             this.replyButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.replyButton.Name = "replyButton";
             this.replyButton.Size = new System.Drawing.Size(76, 25);
@@ -114,7 +119,7 @@
             // 
             this.spectateButton.BackColor = System.Drawing.Color.DimGray;
             this.spectateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.spectateButton.Location = new System.Drawing.Point(78, 199);
+            this.spectateButton.Location = new System.Drawing.Point(69, 157);
             this.spectateButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.spectateButton.Name = "spectateButton";
             this.spectateButton.Size = new System.Drawing.Size(54, 23);
@@ -126,7 +131,7 @@
             // 
             this.joinButton.BackColor = System.Drawing.Color.DimGray;
             this.joinButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.joinButton.Location = new System.Drawing.Point(16, 199);
+            this.joinButton.Location = new System.Drawing.Point(7, 157);
             this.joinButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.joinButton.Name = "joinButton";
             this.joinButton.Size = new System.Drawing.Size(54, 23);
@@ -140,7 +145,7 @@
             this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(249, 51);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(219, 210);
+            this.groupBox1.Size = new System.Drawing.Size(219, 234);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "コメント";
@@ -165,17 +170,18 @@
             "sts",
             "sts",
             "sts"});
-            this.playerList.Location = new System.Drawing.Point(16, 61);
+            this.playerList.Location = new System.Drawing.Point(7, 18);
             this.playerList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.playerList.Name = "playerList";
-            this.playerList.Size = new System.Drawing.Size(215, 122);
+            this.playerList.Size = new System.Drawing.Size(212, 122);
             this.playerList.TabIndex = 1;
+            this.playerList.SelectedIndexChanged += new System.EventHandler(this.playerList_SelectedIndexChanged);
             // 
             // closeButton
             // 
             this.closeButton.BackColor = System.Drawing.Color.DimGray;
             this.closeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.closeButton.Location = new System.Drawing.Point(78, 239);
+            this.closeButton.Location = new System.Drawing.Point(69, 197);
             this.closeButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(54, 23);
@@ -183,20 +189,31 @@
             this.closeButton.Text = "締切";
             this.closeButton.UseVisualStyleBackColor = false;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.playerList);
+            this.groupBox2.Controls.Add(this.closeButton);
+            this.groupBox2.Controls.Add(this.hostButton);
+            this.groupBox2.Controls.Add(this.replyButton);
+            this.groupBox2.Controls.Add(this.spectateButton);
+            this.groupBox2.Controls.Add(this.joinButton);
+            this.groupBox2.ForeColor = System.Drawing.Color.White;
+            this.groupBox2.Location = new System.Drawing.Point(12, 51);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(226, 234);
+            this.groupBox2.TabIndex = 12;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "募集一覧";
+            // 
             // Mchan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
-            this.ClientSize = new System.Drawing.Size(480, 273);
-            this.Controls.Add(this.closeButton);
-            this.Controls.Add(this.playerList);
+            this.ClientSize = new System.Drawing.Size(480, 297);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.joinButton);
-            this.Controls.Add(this.spectateButton);
-            this.Controls.Add(this.replyButton);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.hostButton);
             this.Controls.Add(this.managerButton);
             this.Controls.Add(this.userListPullDown);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -207,6 +224,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Mchan_FormClosed);
             this.Shown += new System.EventHandler(this.Mchan_Shown);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,6 +242,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListBox playerList;
         private System.Windows.Forms.Button closeButton;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }
 

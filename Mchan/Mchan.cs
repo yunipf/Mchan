@@ -7,13 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CoreTweet;
 
 namespace Mchan
 {
     public partial class Mchan : Form
     {
         private Dictionary<int, UserData> userList = null;
+        Tokens tokens = null;
         bool InitSetting = true;
+
 
         public Mchan()
         {
@@ -35,6 +38,7 @@ namespace Mchan
             }
         }
 
+        // アカウントが登録してあるか確認
         private bool InitSettingCheck()
         {
             bool bl = false;
@@ -87,6 +91,37 @@ namespace Mchan
             int userListIndex = userListPullDown.SelectedIndex;
             Properties.Settings.Default.UserListIndex = userListIndex;
             Properties.Settings.Default.Save();
+        }
+
+        private void playerList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void userListPullDown_TextChanged(object sender, EventArgs e)
+        {
+            UserData user = (UserData)userListPullDown.SelectedItem;
+            string accessToken = user.AccessToken;
+            string accessTokenSecret = user.AccessTokenSecret;
+            var key = new KeyData();
+            string consumerKey = key.ConsumerKey;
+            string consumerSecret = key.ConsumerSecret;
+            tokens = Tokens.Create(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+
+            try
+            {
+                var res = tokens.Account.VerifyCredentials();
+                user.ScreenName = res.ScreenName;
+                user.Name = res.Name;
+
+                DBAccess.DBUpdate(user);
+                userList = DBAccess.UserList;
+            }
+            catch (TwitterException ex)
+            {
+                MessageBox.Show(ex.Message);
+                MessageBox.Show("アプリ連携が解除されています。認証をやり直してください。");
+            }
         }
     }
 

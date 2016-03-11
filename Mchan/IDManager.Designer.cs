@@ -53,7 +53,7 @@
             this.userListBox.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.userListBox.FormattingEnabled = true;
             this.userListBox.ItemHeight = 16;
-            this.userListBox.Location = new System.Drawing.Point(6, 18);
+            this.userListBox.Location = new System.Drawing.Point(5, 30);
             this.userListBox.Margin = new System.Windows.Forms.Padding(2);
             this.userListBox.Name = "userListBox";
             this.userListBox.Size = new System.Drawing.Size(203, 148);

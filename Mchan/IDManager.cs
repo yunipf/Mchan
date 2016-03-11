@@ -26,8 +26,19 @@ namespace Mchan
 
         private void ListBoxUpdate()
         {
+            
             userListBox.DisplayMember = "ScreenName";
+            userListBox.ValueMember = "Id";
             userListBox.DataSource = userList.Values.ToList();
+            
+            /*
+            foreach(UserData user in userList.Values.ToList())
+            {
+                userGridView.Rows.Add(user);
+                UserData us = userGridView.;
+            }
+            */
+
         }
 
         private void IDManager_Load(object sender, EventArgs e)
@@ -37,6 +48,13 @@ namespace Mchan
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
+            UserData user = (UserData)userListBox.SelectedItem;
+            //string id = userListBox.SelectedValue.ToString();
+
+            DBAccess.DBDelete(user);
+            userList = DBAccess.UserList;
+            ListBoxUpdate();
+
             
         }
 
