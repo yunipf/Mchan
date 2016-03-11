@@ -84,6 +84,7 @@
     <Compile Include="IDManager.Designer.cs">
       <DependentUpon>IDManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="KeyData.cs" />
     <Compile Include="Mchan.cs">
       <SubType>Form</SubType>
     </Compile>
