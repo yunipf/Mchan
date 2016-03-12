@@ -14,8 +14,9 @@ namespace Mchan
     public partial class Mchan : Form
     {
         private Dictionary<int, UserData> userList = null;
-        Tokens tokens = null;
-        bool InitSetting = true;
+        private Tokens tokens = null;
+        private bool InitSetting = true;
+        
 
 
         public Mchan()
@@ -53,10 +54,41 @@ namespace Mchan
             return bl;
         }
 
+        // Windowsフォームコントロールに対して非同期な呼び出しを行うためのデリゲート
+        delegate void SetMessageLabelCallback(string text);
+
+        private void SetMessageLabel(string text)
+        {
+            if (messageLabel.InvokeRequired)
+            {
+                SetMessageLabelCallback dlg = new SetMessageLabelCallback(SetMessageLabel);
+                this.Invoke(dlg, new object[] { text });
+            }
+            else
+            {
+                messageLabel.Text = text;
+            }
+            
+        }
 
         // bot動作開始メソッド
-        public void StartAnalysis()
+        private void StartAnalysis()
         {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    var res = tokens.Statuses.UserTimeline(screen_name => "e_f_z_match" , count => 20);
+                    foreach(Status status in res)
+                    {
+                        string text = status.Text;
+                        SetMessageLabel(text);
+                        //messageLabel.Text = text;
+                        Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(2000)));
+                    }
+                    Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(10000)));
+                }
+            });
 
         }
 
@@ -116,6 +148,8 @@ namespace Mchan
 
                 DBAccess.DBUpdate(user);
                 userList = DBAccess.UserList;
+
+                StartAnalysis();
             }
             catch (TwitterException ex)
             {
