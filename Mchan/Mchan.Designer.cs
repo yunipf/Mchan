@@ -37,7 +37,7 @@
             this.spectateButton = new System.Windows.Forms.Button();
             this.joinButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.playerList = new System.Windows.Forms.ListBox();
+            this.playerListBox = new System.Windows.Forms.ListBox();
             this.closeButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
@@ -150,14 +150,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "コメント";
             // 
-            // playerList
+            // playerListBox
             // 
-            this.playerList.BackColor = System.Drawing.Color.DimGray;
-            this.playerList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.playerList.ForeColor = System.Drawing.Color.White;
-            this.playerList.FormattingEnabled = true;
-            this.playerList.ItemHeight = 12;
-            this.playerList.Items.AddRange(new object[] {
+            this.playerListBox.BackColor = System.Drawing.Color.DimGray;
+            this.playerListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.playerListBox.ForeColor = System.Drawing.Color.White;
+            this.playerListBox.FormattingEnabled = true;
+            this.playerListBox.ItemHeight = 12;
+            this.playerListBox.Items.AddRange(new object[] {
             "test",
             "test",
             "test",
@@ -170,12 +170,12 @@
             "sts",
             "sts",
             "sts"});
-            this.playerList.Location = new System.Drawing.Point(7, 18);
-            this.playerList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.playerList.Name = "playerList";
-            this.playerList.Size = new System.Drawing.Size(212, 122);
-            this.playerList.TabIndex = 1;
-            this.playerList.SelectedIndexChanged += new System.EventHandler(this.playerList_SelectedIndexChanged);
+            this.playerListBox.Location = new System.Drawing.Point(7, 18);
+            this.playerListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.playerListBox.Name = "playerListBox";
+            this.playerListBox.Size = new System.Drawing.Size(212, 122);
+            this.playerListBox.TabIndex = 1;
+            this.playerListBox.SelectedIndexChanged += new System.EventHandler(this.playerList_SelectedIndexChanged);
             // 
             // closeButton
             // 
@@ -191,7 +191,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.playerList);
+            this.groupBox2.Controls.Add(this.playerListBox);
             this.groupBox2.Controls.Add(this.closeButton);
             this.groupBox2.Controls.Add(this.hostButton);
             this.groupBox2.Controls.Add(this.replyButton);
@@ -240,7 +240,7 @@
         private System.Windows.Forms.Button spectateButton;
         private System.Windows.Forms.Button joinButton;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListBox playerList;
+        private System.Windows.Forms.ListBox playerListBox;
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.GroupBox groupBox2;
     }
