@@ -31,13 +31,6 @@ namespace Mchan
             userListBox.ValueMember = "Id";
             userListBox.DataSource = userList.Values.ToList();
             
-            /*
-            foreach(UserData user in userList.Values.ToList())
-            {
-                userGridView.Rows.Add(user);
-                UserData us = userGridView.;
-            }
-            */
 
         }
 

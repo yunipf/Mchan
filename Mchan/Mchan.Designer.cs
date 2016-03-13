@@ -40,14 +40,17 @@
             this.playerListBox = new System.Windows.Forms.ListBox();
             this.closeButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.createAtLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // userListPullDown
             // 
+            this.userListPullDown.BackColor = System.Drawing.Color.DimGray;
             this.userListPullDown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.userListPullDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.userListPullDown.ForeColor = System.Drawing.Color.White;
             this.userListPullDown.FormattingEnabled = true;
             this.userListPullDown.Location = new System.Drawing.Point(91, 10);
             this.userListPullDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -82,12 +85,12 @@
             // messageLabel
             // 
             this.messageLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
-            this.messageLabel.Font = new System.Drawing.Font("MS UI Gothic", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.messageLabel.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.messageLabel.ForeColor = System.Drawing.Color.White;
             this.messageLabel.Location = new System.Drawing.Point(7, 25);
             this.messageLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.messageLabel.Name = "messageLabel";
-            this.messageLabel.Size = new System.Drawing.Size(204, 182);
+            this.messageLabel.Size = new System.Drawing.Size(204, 179);
             this.messageLabel.TabIndex = 8;
             this.messageLabel.Text = "text";
             // 
@@ -102,6 +105,7 @@
             this.hostButton.TabIndex = 5;
             this.hostButton.Text = "募集";
             this.hostButton.UseVisualStyleBackColor = false;
+            this.hostButton.Click += new System.EventHandler(this.hostButton_Click);
             // 
             // replyButton
             // 
@@ -114,6 +118,7 @@
             this.replyButton.TabIndex = 4;
             this.replyButton.Text = "リプライ";
             this.replyButton.UseVisualStyleBackColor = false;
+            this.replyButton.Click += new System.EventHandler(this.replyButton_Click);
             // 
             // spectateButton
             // 
@@ -141,6 +146,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.createAtLabel);
             this.groupBox1.Controls.Add(this.messageLabel);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(249, 51);
@@ -154,9 +160,10 @@
             // 
             this.playerListBox.BackColor = System.Drawing.Color.DimGray;
             this.playerListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.playerListBox.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.playerListBox.ForeColor = System.Drawing.Color.White;
             this.playerListBox.FormattingEnabled = true;
-            this.playerListBox.ItemHeight = 12;
+            this.playerListBox.ItemHeight = 16;
             this.playerListBox.Items.AddRange(new object[] {
             "test",
             "test",
@@ -173,7 +180,7 @@
             this.playerListBox.Location = new System.Drawing.Point(7, 18);
             this.playerListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.playerListBox.Name = "playerListBox";
-            this.playerListBox.Size = new System.Drawing.Size(212, 122);
+            this.playerListBox.Size = new System.Drawing.Size(212, 114);
             this.playerListBox.TabIndex = 1;
             this.playerListBox.SelectedIndexChanged += new System.EventHandler(this.playerList_SelectedIndexChanged);
             // 
@@ -205,6 +212,19 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "募集一覧";
             // 
+            // createAtLabel
+            // 
+            this.createAtLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
+            this.createAtLabel.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.createAtLabel.ForeColor = System.Drawing.Color.White;
+            this.createAtLabel.Location = new System.Drawing.Point(8, 204);
+            this.createAtLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.createAtLabel.Name = "createAtLabel";
+            this.createAtLabel.Size = new System.Drawing.Size(204, 27);
+            this.createAtLabel.TabIndex = 13;
+            this.createAtLabel.Text = "text";
+            this.createAtLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // Mchan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 12F);
@@ -218,6 +238,7 @@
             this.Controls.Add(this.userListPullDown);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.ForeColor = System.Drawing.Color.White;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "Mchan";
             this.Text = "Mchan";
@@ -243,6 +264,7 @@
         private System.Windows.Forms.ListBox playerListBox;
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label createAtLabel;
     }
 }
 
