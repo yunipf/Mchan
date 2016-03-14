@@ -49,6 +49,7 @@
             // userListBox
             // 
             this.userListBox.BackColor = System.Drawing.Color.DimGray;
+            this.userListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.userListBox.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.userListBox.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.userListBox.FormattingEnabled = true;
@@ -56,7 +57,7 @@
             this.userListBox.Location = new System.Drawing.Point(5, 30);
             this.userListBox.Margin = new System.Windows.Forms.Padding(2);
             this.userListBox.Name = "userListBox";
-            this.userListBox.Size = new System.Drawing.Size(203, 148);
+            this.userListBox.Size = new System.Drawing.Size(203, 146);
             this.userListBox.TabIndex = 0;
             // 
             // addUserButton

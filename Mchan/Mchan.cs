@@ -18,10 +18,10 @@ namespace Mchan
 
     public partial class Mchan : Form
     {
+        // アカウント一覧
         private Dictionary<int, UserData> userList = null;
-        //private Dictionary<string, PlayerData> playerDataList = null;
+        // 募集中のプレイヤー一覧
         private ConcurrentDictionary<string, PlayerData> playerDataList = null;
-        //private BindingSource bindingSource = new BindingSource();
         private Process efzr = null;
         private Tokens tokens = null;
         private bool InitSetting = true;
@@ -30,7 +30,7 @@ namespace Mchan
 
         // まっちんぐちゃんのUserId
         private long mchanUserId = 2905316520;
-        // プレイヤーの残存時間　120分
+        // プレイヤーの残存時間　180分
         private TimeSpan timeSpan = TimeSpan.FromMinutes(180);
         // 取得ツイート数
         private int count = 20;
@@ -81,57 +81,47 @@ namespace Mchan
         }
 
         
-        // Windowsフォームコントロールに対して非同期な呼び出しを行うためのデリゲート
-        
-        delegate void SetMessageLabelCallback(string text);
 
-        private void SetMessageLabel(string text)
+        /// <summary>
+        /// 募集一覧の更新
+        /// </summary>
+        private void SetPlayerListBox()
         {
-            if (messageLabel.InvokeRequired)
-            {
-                SetMessageLabelCallback dlg = new SetMessageLabelCallback(SetMessageLabel);
-                Invoke(dlg, new object[] { text });
-            }
-            else
-            {
-                messageLabel.Text = text;
-            }
-            
-        }
-        
-        
-        delegate void SetPlayerListBoxCallback(ConcurrentDictionary<string, PlayerData> playerDataList);
 
-        private void SetPlayerListBox(ConcurrentDictionary<string, PlayerData> playerDataList)
-        {
-            if (playerListBox.InvokeRequired)
-            {
-                SetPlayerListBoxCallback dlg = new SetPlayerListBoxCallback(SetPlayerListBox);
-                Invoke(dlg, new object[] { playerDataList });
-            }
-            else
-            {
-                playerListBox.DisplayMember = "ScreenName";
-                playerListBox.ValueMember = "ScreenName";
-
-                playerListBox.DataSource = playerDataList.Values.ToList();
-                if(playerDataList.Count == 0)
+            Invoke(
+                (MethodInvoker)delegate ()
                 {
-                    setButtonEnabled(false);
-                }
-                else
-                {
-                    setButtonEnabled(true);
-                }
+                    playerListBox.DisplayMember = "ScreenName";
+                    playerListBox.ValueMember = "ScreenName";
 
-            }
+                    playerListBox.DataSource = playerDataList.Values.ToList();
+                    if (playerDataList.Count == 0)
+                    {
+                        setButtonEnabled(false);
+                        messageLabel.Text = "誰もいねぇ";
+                        createAtLabel.Text = "えいえんはあるよ";
+                    }
+                    else
+                    {
+                        setButtonEnabled(true);
+                    }
+                }
+            );
+
+
         }
 
+        /// <summary>
+        /// 各ボタンの活性・非活性の切り替え
+        /// </summary>
+        /// <param name="enabled"></param>
         private void setButtonEnabled(bool enabled)
         {
             joinButton.Enabled = enabled;
             spectateButton.Enabled = enabled;
             replyButton.Enabled = enabled;
+
+            
         }
 
         /// <summary>
@@ -140,6 +130,7 @@ namespace Mchan
         /// <returns></returns>
         private async Task StartAnalysis()
         {
+            // ユーザタイムラインを取得し、募集中のプレイヤーを一覧に追加
             Task task1 = Task.Run(() =>
             {
             playerDataList = new ConcurrentDictionary<string, PlayerData>();
@@ -150,40 +141,15 @@ namespace Mchan
                 .OrderBy((Status status) => status.CreatedAt);
 
                 foreach (Status status in res) OperatePlayerList(status);
+
                 
-                /*
-                foreach (Status status in res.Reverse())
-                {
-                    if (status.CreatedAt < limitTime)
-                    {
-                        continue;
-                    }
-
-                    OperatePlayerList(status);
-                    /*
-                    if (MatchMode.Host == getMatchMode(status.Text) || MatchMode.Client == getMatchMode(status.Text))
-                    {
-                        var playerData = new PlayerData(status.InReplyToScreenName, getName(status.Text),
-                            getUserIp(status.Text), status.Text, getMatchMode(status.Text), status.CreatedAt + new TimeSpan(TimeSpan.TicksPerHour * 9));
-                        
-                        playerDataList.Remove(playerData.ScreenName);
-                        playerDataList.Add(playerData.ScreenName, playerData);
-
-                    }                    
-                    else if(MatchMode.Close == getMatchMode(status.Text))
-                    {
-                        playerDataList.Remove(status.InReplyToScreenName);
-                    }
-                    
-                    
-                }*/
-
-                SetPlayerListBox(playerDataList);
+                SetPlayerListBox();
             }
             );
 
             await task1;
 
+            // 定期的に募集一覧のプレイヤーのcreateAtを確認し、設定した時間を過ぎたものを削除する
             Task task2 = Task.Run(() =>
             {
                 while (true)
@@ -199,7 +165,8 @@ namespace Mchan
                     {
                         playerDataList.TryRemove(key, out removedValue);
                     }
-                    SetPlayerListBox(playerDataList);
+                    
+                    SetPlayerListBox();
                 }
                 
             });
@@ -212,30 +179,16 @@ namespace Mchan
             .Repeat()
             .Where((StreamingMessage m) => m.Type == MessageType.Create)
                 .Cast<StatusMessage>()
-                //.Select((StatusMessage m) => m.Status.Text)
                 .Select((StatusMessage m) => m.Status)
                 .Subscribe(
-                    //(string s) => MessageBox.Show(),
-                    //(Status status) => OperatePlayerList(status),
                     (Status status) => {
                         OperatePlayerList(status);
-                        SetPlayerListBox(playerDataList);
+                        SetPlayerListBox();
                     },
                     (Exception ex) => MessageBox.Show(ex.Message),
                     () => MessageBox.Show("終わり")
                  );
-
-            /*
-            tokens.Streaming.FilterAsObservable(follow => "128628857")
-                .Where((StreamingMessage m) => m.Type == MessageType.Create)
-                .Cast<StatusMessage>()
-                .Select((StatusMessage m) => m.Status.Text)
-                .Subscribe(
-                    (string s) => MessageBox.Show(s),
-                    (Exception ex) => MessageBox.Show(ex.Message),
-                    () => MessageBox.Show("終わり")
-                );
-            */
+            
         }
 
         /// <summary>
@@ -252,24 +205,16 @@ namespace Mchan
                     getUserIp(status.Text), status.Text, getMatchMode(status.Text), status.CreatedAt);
 
                 playerDataList.AddOrUpdate(playerData.ScreenName, playerData, (key, value) => playerData);
-                    /*
-                    value = playerData;
-                    return value;
-                    */
-                
-                /*
-                playerDataList.Remove(playerData.ScreenName);
-                playerDataList.Add(playerData.ScreenName, playerData);
-                */
+               
             }
             else if (MatchMode.Close == getMatchMode(status.Text))
             {
                 PlayerData data;
                 playerDataList.TryRemove(status.InReplyToScreenName, out data);
                 
-                //playerDataList.Remove(status.InReplyToScreenName);
+                
             }
-            //SetPlayerListBox(playerDataList);
+            
         }
 
         /// <summary>
@@ -384,119 +329,7 @@ namespace Mchan
         }
 
         
-        private async void Mchan_Shown(object sender, EventArgs e)
-        {
-            if (InitSetting)
-            {
-                new IDManager().ShowDialog();
-                
-            }
-          
-            UserListUpdate();
-            userListPullDown.SelectedIndex = Properties.Settings.Default.UserListIndex;
-
-            await GetIPAddress();
-        }
-
-        private void managerButton_Click(object sender, EventArgs e)
-        {
-            new IDManager().ShowDialog();
-            UserListUpdate();
-        }
-
-        private void Mchan_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            int userListIndex = userListPullDown.SelectedIndex;
-            Properties.Settings.Default.UserListIndex = userListIndex;
-            Properties.Settings.Default.Save();
-        }
-
-        private void playerList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var player = (PlayerData)playerListBox.SelectedItem;
-            messageLabel.Text = player.Message;
-            createAtLabel.Text = (player.CreateAt + TimeSpan.FromHours(9)).ToString("G");
-        }
-
-        private async void userListPullDown_TextChanged(object sender, EventArgs e)
-        {
-            UserData user = (UserData)userListPullDown.SelectedItem;
-            string accessToken = user.AccessToken;
-            string accessTokenSecret = user.AccessTokenSecret;
-            var key = new KeyData();
-            string consumerKey = key.ConsumerKey;
-            string consumerSecret = key.ConsumerSecret;
-            tokens = Tokens.Create(consumerKey, consumerSecret, accessToken, accessTokenSecret);
-
-            try
-            {
-                var res = tokens.Account.VerifyCredentials();
-                tokens.ScreenName = res.ScreenName;
-                user.ScreenName = res.ScreenName;
-                user.Name = res.Name;
-
-                DBAccess.DBUpdate(user);
-                userList = DBAccess.UserList;
-
-                await StartAnalysis();
-            }
-            catch (TwitterException ex)
-            {
-                MessageBox.Show(ex.Message);
-                MessageBox.Show("アプリ連携が解除されています。認証をやり直してください。");
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            playerListBox.Focus();
-        }
-
-        private void replyButton_Click(object sender, EventArgs e)
-        {
-            var sd = (Button)sender;
-            new TweetDisplay(playerListBox.SelectedValue.ToString(), sd.Name, tokens).ShowDialog();
-        }
-
-        private async void hostButton_Click(object sender, EventArgs e)
-        {
-            var sd = (Button)sender;
-            var result = new TweetDisplay(
-                Properties.Settings.Default.IPAddress + ":" + 
-                Properties.Settings.Default.Port
-                , sd.Name
-                , tokens).ShowDialog();
-
-            if(DialogResult.OK == result)
-            {
-                await EfzRun();
-                SendKeys.Send("1");
-            }
-            
-        }
-
-        private async void joinButton_Click(object sender, EventArgs e)
-        {
-            var player = (PlayerData)playerListBox.SelectedItem;
-            Clipboard.SetDataObject(player.Ip, false);
-            await EfzRun();
-            SendKeys.Send("3");
-        }
-
-        private async void spectateButton_Click(object sender, EventArgs e)
-        {
-            var player = (PlayerData)playerListBox.SelectedItem;
-            Clipboard.SetDataObject(player.Ip, false);
-            await EfzRun();
-            SendKeys.Send("4");
-        }
-
-        private async void offlineButton_Click(object sender, EventArgs e)
-        {
-            await EfzRun();
-            SendKeys.Send("5");
-
-        }
+        
 
         //using System.Runtime.InteropServices;
 
@@ -506,7 +339,7 @@ namespace Mchan
 
 
         /// <summary>
-        /// EFZRevivalをHostモードで起動
+        /// EFZRevivalを起動
         /// </summary>
         /// <returns></returns>
         private async Task EfzRun()
@@ -543,6 +376,7 @@ namespace Mchan
         /// <returns></returns>
         private async Task GetIPAddress()
         {
+            // UPnPを使用してグローバルIP取得
             Task task1 = Task.Run(() =>
             {
                 UPnPControlPoint p = new UPnPControlPoint();
@@ -551,6 +385,7 @@ namespace Mchan
                 Properties.Settings.Default.IPAddress = result;
             });
 
+            // EfzRevival.iniからポート番号抽出
             Task task2 = Task.Run(() =>
             {
                 string result = "";
@@ -597,28 +432,213 @@ namespace Mchan
             await combineTask;
         }
 
-        private async void joinManualButton_Click(object sender, EventArgs e)
-        {
-            string ip = getUserIp(Clipboard.GetText());
-            DialogResult result = new IPInputDisplay(ip).ShowDialog();
-            if(result == DialogResult.OK)
-            {
-                await EfzRun();
-                SendKeys.Send("3");
-            }
-            
-        }
 
+        /* イベント */
+
+        
+        /// <summary>
+        /// クラ専募集ボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void clientButton_Click(object sender, EventArgs e)
         {
             var sd = (Button)sender;
             var result = new TweetDisplay("", sd.Name, tokens).ShowDialog();
         }
 
+        /// <summary>
+        /// 締切ボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void closeButton_Click(object sender, EventArgs e)
         {
             var sd = (Button)sender;
             var result = new TweetDisplay("", sd.Name, tokens).ShowDialog();
+        }
+
+        /// <summary>
+        /// メインフォームが開かれた時のイベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Mchan_Shown(object sender, EventArgs e)
+        {
+            if (InitSetting)
+            {
+                new IDManager().ShowDialog();
+
+            }
+
+            UserListUpdate();
+            userListPullDown.SelectedIndex = Properties.Settings.Default.UserListIndex;
+
+            await GetIPAddress();
+        }
+
+        /// <summary>
+        /// アカウント管理ボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void managerButton_Click(object sender, EventArgs e)
+        {
+            new IDManager().ShowDialog();
+            UserListUpdate();
+        }
+
+        /// <summary>
+        /// メインフォームを終了したときのイベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Mchan_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            int userListIndex = userListPullDown.SelectedIndex;
+            Properties.Settings.Default.UserListIndex = userListIndex;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// 募集一覧からプレイヤーを選択した時のイベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void playerList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var player = (PlayerData)playerListBox.SelectedItem;
+            messageLabel.Text = player.Message;
+            createAtLabel.Text = (player.CreateAt + TimeSpan.FromHours(9)).ToString("G");
+        }
+
+        /// <summary>
+        /// 使用アカウントを選択した時のイベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void userListPullDown_TextChanged(object sender, EventArgs e)
+        {
+            // トークンの作成
+            UserData user = (UserData)userListPullDown.SelectedItem;
+            string accessToken = user.AccessToken;
+            string accessTokenSecret = user.AccessTokenSecret;
+            var key = new KeyData();
+            string consumerKey = key.ConsumerKey;
+            string consumerSecret = key.ConsumerSecret;
+            tokens = Tokens.Create(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+
+            try
+            {
+                var res = tokens.Account.VerifyCredentials();
+                tokens.ScreenName = res.ScreenName;
+                user.ScreenName = res.ScreenName;
+                user.Name = res.Name;
+
+                DBAccess.DBUpdate(user);
+                userList = DBAccess.UserList;
+
+                await StartAnalysis();
+            }
+            catch (TwitterException ex)
+            {
+                MessageBox.Show(ex.Message);
+                MessageBox.Show("アプリ連携が解除されています。認証をやり直してください。");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            playerListBox.Focus();
+        }
+
+        /// <summary>
+        /// 返信ボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void replyButton_Click(object sender, EventArgs e)
+        {
+            var sd = (Button)sender;
+            new TweetDisplay(playerListBox.SelectedValue.ToString(), sd.Name, tokens).ShowDialog();
+        }
+
+        /// <summary>
+        /// 募集ボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void hostButton_Click(object sender, EventArgs e)
+        {
+            var sd = (Button)sender;
+            var result = new TweetDisplay(
+                Properties.Settings.Default.IPAddress + ":" +
+                Properties.Settings.Default.Port
+                , sd.Name
+                , tokens).ShowDialog();
+
+            if (DialogResult.OK == result)
+            {
+                await EfzRun();
+                SendKeys.Send("1");
+            }
+
+        }
+
+        /// <summary>
+        /// IP入力ボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void joinManualButton_Click(object sender, EventArgs e)
+        {
+            string ip = getUserIp(Clipboard.GetText());
+            DialogResult result = new IPInputDisplay(ip).ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                await EfzRun();
+                SendKeys.Send("3");
+            }
+
+        }
+
+
+        /// <summary>
+        /// 乱入ボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void joinButton_Click(object sender, EventArgs e)
+        {
+            var player = (PlayerData)playerListBox.SelectedItem;
+            Clipboard.SetDataObject(player.Ip, false);
+            await EfzRun();
+            SendKeys.Send("3");
+        }
+
+        /// <summary>
+        /// 観戦ボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void spectateButton_Click(object sender, EventArgs e)
+        {
+            var player = (PlayerData)playerListBox.SelectedItem;
+            Clipboard.SetDataObject(player.Ip, false);
+            await EfzRun();
+            SendKeys.Send("4");
+        }
+
+        /// <summary>
+        /// オフライン起動押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void offlineButton_Click(object sender, EventArgs e)
+        {
+            await EfzRun();
+            SendKeys.Send("5");
+
         }
     }
 

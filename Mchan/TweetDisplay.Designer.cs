@@ -63,7 +63,7 @@
             this.lengthLabel.Name = "lengthLabel";
             this.lengthLabel.Size = new System.Drawing.Size(62, 27);
             this.lengthLabel.TabIndex = 2;
-            this.lengthLabel.Text = "label1";
+            this.lengthLabel.Text = "140";
             // 
             // TweetDisplay
             // 

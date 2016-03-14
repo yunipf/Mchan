@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Mchan
 {
+    /// <summary>
+    /// 募集モード
+    /// Host:erevm
+    /// Close:ereve
+    /// Client:erevc
+    /// </summary>
     enum MatchMode
     {
         Host,
