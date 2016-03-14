@@ -19,7 +19,6 @@ namespace Mchan
             InitializeComponent();
         }
 
-        // 締切、リプライボタンで開いた時
         public TweetDisplay(string text, string buttonName, Tokens tokens)
         {
             InitializeComponent();

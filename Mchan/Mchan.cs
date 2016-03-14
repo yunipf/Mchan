@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using CoreTweet;
 using CoreTweet.Streaming;
 
@@ -17,9 +19,10 @@ namespace Mchan
     public partial class Mchan : Form
     {
         private Dictionary<int, UserData> userList = null;
-        private Dictionary<string, PlayerData> playerDataList = null;
-
-        private BindingSource bindingSource = new BindingSource();
+        //private Dictionary<string, PlayerData> playerDataList = null;
+        private ConcurrentDictionary<string, PlayerData> playerDataList = null;
+        //private BindingSource bindingSource = new BindingSource();
+        private Process efzr = null;
         private Tokens tokens = null;
         private bool InitSetting = true;
 
@@ -28,13 +31,11 @@ namespace Mchan
         // まっちんぐちゃんのUserId
         private long mchanUserId = 2905316520;
         // プレイヤーの残存時間　120分
-        private TimeSpan timeSpan = new TimeSpan(TimeSpan.TicksPerMinute * 600);
+        private TimeSpan timeSpan = TimeSpan.FromMinutes(180);
         // 取得ツイート数
         private int count = 20;
-        // EFZRevival.exeのパス
-        private string efzrPath = @"F:\tasogare\EFZR\EfzRevival.exe";
-        // EFZRevival.iniのパス
-        private string efzriniPath = @"F:\tasogare\EFZR\EfzRevival.ini";
+        // EFZフォルダパス
+        private string efzFolderPath = @"F:\tasogare\EFZR\";
 
         /// <summary>
         /// コンストラクタ
@@ -99,9 +100,9 @@ namespace Mchan
         }
         
         
-        delegate void SetPlayerListBoxCallback(Dictionary<string, PlayerData> playerDataList);
+        delegate void SetPlayerListBoxCallback(ConcurrentDictionary<string, PlayerData> playerDataList);
 
-        private void SetPlayerListBox(Dictionary<string, PlayerData> playerDataList)
+        private void SetPlayerListBox(ConcurrentDictionary<string, PlayerData> playerDataList)
         {
             if (playerListBox.InvokeRequired)
             {
@@ -114,8 +115,23 @@ namespace Mchan
                 playerListBox.ValueMember = "ScreenName";
 
                 playerListBox.DataSource = playerDataList.Values.ToList();
+                if(playerDataList.Count == 0)
+                {
+                    setButtonEnabled(false);
+                }
+                else
+                {
+                    setButtonEnabled(true);
+                }
 
             }
+        }
+
+        private void setButtonEnabled(bool enabled)
+        {
+            joinButton.Enabled = enabled;
+            spectateButton.Enabled = enabled;
+            replyButton.Enabled = enabled;
         }
 
         /// <summary>
@@ -124,26 +140,33 @@ namespace Mchan
         /// <returns></returns>
         private async Task StartAnalysis()
         {
-            Task task = Task.Run(() =>
+            Task task1 = Task.Run(() =>
             {
-                playerDataList = new Dictionary<string, PlayerData>();
-                // 現在時刻の取得
-                var now = DateTimeOffset.UtcNow;
-                now -= timeSpan;
-                var res = tokens.Statuses.UserTimeline(user_id => mchanUserId, count => this.count);
+            playerDataList = new ConcurrentDictionary<string, PlayerData>();
 
+            var limitTime = DateTimeOffset.UtcNow - timeSpan;
+                var res = tokens.Statuses.UserTimeline(user_id => mchanUserId, count => this.count)
+                .Where((Status status) => status.CreatedAt > limitTime)
+                .OrderBy((Status status) => status.CreatedAt);
+
+                foreach (Status status in res) OperatePlayerList(status);
+                
+                /*
                 foreach (Status status in res.Reverse())
                 {
-                    if (status.CreatedAt < now)
+                    if (status.CreatedAt < limitTime)
                     {
                         continue;
                     }
 
+                    OperatePlayerList(status);
+                    /*
                     if (MatchMode.Host == getMatchMode(status.Text) || MatchMode.Client == getMatchMode(status.Text))
                     {
                         var playerData = new PlayerData(status.InReplyToScreenName, getName(status.Text),
                             getUserIp(status.Text), status.Text, getMatchMode(status.Text), status.CreatedAt + new TimeSpan(TimeSpan.TicksPerHour * 9));
-
+                        
+                        playerDataList.Remove(playerData.ScreenName);
                         playerDataList.Add(playerData.ScreenName, playerData);
 
                     }                    
@@ -152,14 +175,101 @@ namespace Mchan
                         playerDataList.Remove(status.InReplyToScreenName);
                     }
                     
-                }
+                    
+                }*/
 
                 SetPlayerListBox(playerDataList);
             }
             );
 
-            await task;
-            
+            await task1;
+
+            Task task2 = Task.Run(() =>
+            {
+                while (true)
+                {
+                    Task.WaitAll(Task.Delay(TimeSpan.FromMinutes(10)));
+                    PlayerData removedValue;
+                    var limitTime = DateTimeOffset.UtcNow - timeSpan;
+                    var res = from dic in playerDataList
+                              where dic.Value.CreateAt < limitTime
+                              select dic.Key;
+
+                    foreach (string key in res)
+                    {
+                        playerDataList.TryRemove(key, out removedValue);
+                    }
+                    SetPlayerListBox(playerDataList);
+                }
+                
+            });
+
+            // ストリーミングでツイート取得
+            var observable = tokens.Streaming.FilterAsObservable(follow => mchanUserId);
+            observable.Catch(
+                observable.DelaySubscription(TimeSpan.FromSeconds(10)).Retry()
+            )
+            .Repeat()
+            .Where((StreamingMessage m) => m.Type == MessageType.Create)
+                .Cast<StatusMessage>()
+                //.Select((StatusMessage m) => m.Status.Text)
+                .Select((StatusMessage m) => m.Status)
+                .Subscribe(
+                    //(string s) => MessageBox.Show(),
+                    //(Status status) => OperatePlayerList(status),
+                    (Status status) => {
+                        OperatePlayerList(status);
+                        SetPlayerListBox(playerDataList);
+                    },
+                    (Exception ex) => MessageBox.Show(ex.Message),
+                    () => MessageBox.Show("終わり")
+                 );
+
+            /*
+            tokens.Streaming.FilterAsObservable(follow => "128628857")
+                .Where((StreamingMessage m) => m.Type == MessageType.Create)
+                .Cast<StatusMessage>()
+                .Select((StatusMessage m) => m.Status.Text)
+                .Subscribe(
+                    (string s) => MessageBox.Show(s),
+                    (Exception ex) => MessageBox.Show(ex.Message),
+                    () => MessageBox.Show("終わり")
+                );
+            */
+        }
+
+        /// <summary>
+        /// playerListへのPlayerDataの追加、及び削除を行う
+        /// </summary>
+        /// <param name="status"></param>
+        private void OperatePlayerList(Status status)
+        {
+
+            if (MatchMode.Host == getMatchMode(status.Text) || MatchMode.Client == getMatchMode(status.Text))
+            {
+               
+                var playerData = new PlayerData(status.InReplyToScreenName, getName(status.Text),
+                    getUserIp(status.Text), status.Text, getMatchMode(status.Text), status.CreatedAt);
+
+                playerDataList.AddOrUpdate(playerData.ScreenName, playerData, (key, value) => playerData);
+                    /*
+                    value = playerData;
+                    return value;
+                    */
+                
+                /*
+                playerDataList.Remove(playerData.ScreenName);
+                playerDataList.Add(playerData.ScreenName, playerData);
+                */
+            }
+            else if (MatchMode.Close == getMatchMode(status.Text))
+            {
+                PlayerData data;
+                playerDataList.TryRemove(status.InReplyToScreenName, out data);
+                
+                //playerDataList.Remove(status.InReplyToScreenName);
+            }
+            //SetPlayerListBox(playerDataList);
         }
 
         /// <summary>
@@ -305,7 +415,7 @@ namespace Mchan
         {
             var player = (PlayerData)playerListBox.SelectedItem;
             messageLabel.Text = player.Message;
-            createAtLabel.Text = player.CreateAt.ToString("G");
+            createAtLabel.Text = (player.CreateAt + TimeSpan.FromHours(9)).ToString("G");
         }
 
         private async void userListPullDown_TextChanged(object sender, EventArgs e)
@@ -360,9 +470,40 @@ namespace Mchan
             if(DialogResult.OK == result)
             {
                 await EfzRun();
+                SendKeys.Send("1");
             }
             
         }
+
+        private async void joinButton_Click(object sender, EventArgs e)
+        {
+            var player = (PlayerData)playerListBox.SelectedItem;
+            Clipboard.SetDataObject(player.Ip, false);
+            await EfzRun();
+            SendKeys.Send("3");
+        }
+
+        private async void spectateButton_Click(object sender, EventArgs e)
+        {
+            var player = (PlayerData)playerListBox.SelectedItem;
+            Clipboard.SetDataObject(player.Ip, false);
+            await EfzRun();
+            SendKeys.Send("4");
+        }
+
+        private async void offlineButton_Click(object sender, EventArgs e)
+        {
+            await EfzRun();
+            SendKeys.Send("5");
+
+        }
+
+        //using System.Runtime.InteropServices;
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
 
         /// <summary>
         /// EFZRevivalをHostモードで起動
@@ -372,17 +513,30 @@ namespace Mchan
         {
             Task task = Task.Run(() =>
             {
-                Process efzr = new Process();
+                if (efzr == null)
+                {
+                    efzr = new Process();
+                    efzr.StartInfo.FileName = efzFolderPath + @"\EfzRevival.exe";
+                    efzr.StartInfo.WorkingDirectory = efzFolderPath;
+                    efzr.Start();
+                }
+                else if (efzr.HasExited)
+                {
+                    efzr.Start();
+                }
+                else
+                {
+                    SetForegroundWindow(efzr.MainWindowHandle);
+                }
 
-                efzr.StartInfo.FileName = efzrPath;
-                efzr.Start();
+                
                 Task.WaitAll(Task.Delay(TimeSpan.FromMilliseconds(500)));
                 
             });
             await task;
-            SendKeys.Send("1");
         }
 
+        
         /// <summary>
         /// グローバルIPアドレス、使用ポート番号の取得
         /// </summary>
@@ -404,35 +558,67 @@ namespace Mchan
                 System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.None);
                 System.Text.RegularExpressions.Match match;
 
-                using (System.IO.StreamReader sr = new System.IO.StreamReader(
-                    efzriniPath,
+                try
+                {
+                    using (System.IO.StreamReader sr = new System.IO.StreamReader(
+                    efzFolderPath + @"\EfzRevival.ini",
                     Encoding.UTF8))
-                {
-                    while(!sr.EndOfStream)
                     {
-                        string text = sr.ReadLine();
-                        match = regex.Match(text);
-
-                        if (match.Success)
+                        while (!sr.EndOfStream)
                         {
-                            result = match.ToString();
-                            break;
-                        }
-                    }
+                            string text = sr.ReadLine();
+                            match = regex.Match(text);
 
+                            if (match.Success)
+                            {
+                                result = match.ToString();
+                                break;
+                            }
+                        }
+
+                    }
+                    pattern = @"[0-9]{1,5}";
+                    regex = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.None);
+                    match = regex.Match(result);
+                    if (match.Success)
+                    {
+                        Properties.Settings.Default.Port = match.ToString();
+                    }
                 }
-                pattern = @"[0-9]{1,5}";
-                regex = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.None);
-                match = regex.Match(result);
-                if (match.Success)
+                catch (Exception ex)
                 {
-                    Properties.Settings.Default.Port = match.ToString();
+                    MessageBox.Show(ex.Message);
                 }
+                
 
             });
 
             Task combineTask = Task.WhenAll(task1, task2);
             await combineTask;
+        }
+
+        private async void joinManualButton_Click(object sender, EventArgs e)
+        {
+            string ip = getUserIp(Clipboard.GetText());
+            DialogResult result = new IPInputDisplay(ip).ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                await EfzRun();
+                SendKeys.Send("3");
+            }
+            
+        }
+
+        private void clientButton_Click(object sender, EventArgs e)
+        {
+            var sd = (Button)sender;
+            var result = new TweetDisplay("", sd.Name, tokens).ShowDialog();
+        }
+
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            var sd = (Button)sender;
+            var result = new TweetDisplay("", sd.Name, tokens).ShowDialog();
         }
     }
 

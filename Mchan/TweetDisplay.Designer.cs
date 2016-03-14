@@ -76,9 +76,12 @@
             this.Controls.Add(this.tweetTextBox);
             this.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.ForeColor = System.Drawing.Color.White;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "TweetDisplay";
-            this.Text = "TweetDisplay";
+            this.Text = "ツイート";
             this.ResumeLayout(false);
             this.PerformLayout();
 

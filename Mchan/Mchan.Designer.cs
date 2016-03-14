@@ -37,10 +37,13 @@
             this.spectateButton = new System.Windows.Forms.Button();
             this.joinButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.createAtLabel = new System.Windows.Forms.Label();
             this.playerListBox = new System.Windows.Forms.ListBox();
             this.closeButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.createAtLabel = new System.Windows.Forms.Label();
+            this.offlineButton = new System.Windows.Forms.Button();
+            this.clientButton = new System.Windows.Forms.Button();
+            this.joinManualButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -52,7 +55,7 @@
             this.userListPullDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.userListPullDown.ForeColor = System.Drawing.Color.White;
             this.userListPullDown.FormattingEnabled = true;
-            this.userListPullDown.Location = new System.Drawing.Point(91, 10);
+            this.userListPullDown.Location = new System.Drawing.Point(75, 10);
             this.userListPullDown.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.userListPullDown.Name = "userListPullDown";
             this.userListPullDown.Size = new System.Drawing.Size(136, 20);
@@ -63,7 +66,7 @@
             // 
             this.managerButton.BackColor = System.Drawing.Color.DimGray;
             this.managerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.managerButton.Location = new System.Drawing.Point(252, 8);
+            this.managerButton.Location = new System.Drawing.Point(219, 8);
             this.managerButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.managerButton.Name = "managerButton";
             this.managerButton.Size = new System.Drawing.Size(107, 23);
@@ -90,7 +93,7 @@
             this.messageLabel.Location = new System.Drawing.Point(7, 25);
             this.messageLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.messageLabel.Name = "messageLabel";
-            this.messageLabel.Size = new System.Drawing.Size(204, 179);
+            this.messageLabel.Size = new System.Drawing.Size(204, 175);
             this.messageLabel.TabIndex = 8;
             this.messageLabel.Text = "text";
             // 
@@ -111,12 +114,12 @@
             // 
             this.replyButton.BackColor = System.Drawing.Color.DimGray;
             this.replyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.replyButton.Location = new System.Drawing.Point(139, 195);
+            this.replyButton.Location = new System.Drawing.Point(7, 203);
             this.replyButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.replyButton.Name = "replyButton";
-            this.replyButton.Size = new System.Drawing.Size(76, 25);
+            this.replyButton.Size = new System.Drawing.Size(42, 25);
             this.replyButton.TabIndex = 4;
-            this.replyButton.Text = "リプライ";
+            this.replyButton.Text = "返信";
             this.replyButton.UseVisualStyleBackColor = false;
             this.replyButton.Click += new System.EventHandler(this.replyButton_Click);
             // 
@@ -131,6 +134,7 @@
             this.spectateButton.TabIndex = 3;
             this.spectateButton.Text = "観戦";
             this.spectateButton.UseVisualStyleBackColor = false;
+            this.spectateButton.Click += new System.EventHandler(this.spectateButton_Click);
             // 
             // joinButton
             // 
@@ -143,11 +147,13 @@
             this.joinButton.TabIndex = 2;
             this.joinButton.Text = "乱入";
             this.joinButton.UseVisualStyleBackColor = false;
+            this.joinButton.Click += new System.EventHandler(this.joinButton_Click);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.createAtLabel);
             this.groupBox1.Controls.Add(this.messageLabel);
+            this.groupBox1.Controls.Add(this.replyButton);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(249, 51);
             this.groupBox1.Name = "groupBox1";
@@ -155,6 +161,19 @@
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "コメント";
+            // 
+            // createAtLabel
+            // 
+            this.createAtLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
+            this.createAtLabel.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.createAtLabel.ForeColor = System.Drawing.Color.White;
+            this.createAtLabel.Location = new System.Drawing.Point(57, 204);
+            this.createAtLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.createAtLabel.Name = "createAtLabel";
+            this.createAtLabel.Size = new System.Drawing.Size(155, 27);
+            this.createAtLabel.TabIndex = 13;
+            this.createAtLabel.Text = "text";
+            this.createAtLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // playerListBox
             // 
@@ -195,13 +214,15 @@
             this.closeButton.TabIndex = 11;
             this.closeButton.Text = "締切";
             this.closeButton.UseVisualStyleBackColor = false;
+            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.joinManualButton);
+            this.groupBox2.Controls.Add(this.clientButton);
             this.groupBox2.Controls.Add(this.playerListBox);
             this.groupBox2.Controls.Add(this.closeButton);
             this.groupBox2.Controls.Add(this.hostButton);
-            this.groupBox2.Controls.Add(this.replyButton);
             this.groupBox2.Controls.Add(this.spectateButton);
             this.groupBox2.Controls.Add(this.joinButton);
             this.groupBox2.ForeColor = System.Drawing.Color.White;
@@ -212,18 +233,44 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "募集一覧";
             // 
-            // createAtLabel
+            // offlineButton
             // 
-            this.createAtLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
-            this.createAtLabel.Font = new System.Drawing.Font("MS UI Gothic", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.createAtLabel.ForeColor = System.Drawing.Color.White;
-            this.createAtLabel.Location = new System.Drawing.Point(8, 204);
-            this.createAtLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.createAtLabel.Name = "createAtLabel";
-            this.createAtLabel.Size = new System.Drawing.Size(204, 27);
-            this.createAtLabel.TabIndex = 13;
-            this.createAtLabel.Text = "text";
-            this.createAtLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.offlineButton.BackColor = System.Drawing.Color.DimGray;
+            this.offlineButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.offlineButton.Location = new System.Drawing.Point(361, 8);
+            this.offlineButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.offlineButton.Name = "offlineButton";
+            this.offlineButton.Size = new System.Drawing.Size(107, 23);
+            this.offlineButton.TabIndex = 13;
+            this.offlineButton.Text = "オフライン起動";
+            this.offlineButton.UseVisualStyleBackColor = false;
+            this.offlineButton.Click += new System.EventHandler(this.offlineButton_Click);
+            // 
+            // clientButton
+            // 
+            this.clientButton.BackColor = System.Drawing.Color.DimGray;
+            this.clientButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.clientButton.Location = new System.Drawing.Point(145, 197);
+            this.clientButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.clientButton.Name = "clientButton";
+            this.clientButton.Size = new System.Drawing.Size(74, 23);
+            this.clientButton.TabIndex = 12;
+            this.clientButton.Text = "クラ専募集";
+            this.clientButton.UseVisualStyleBackColor = false;
+            this.clientButton.Click += new System.EventHandler(this.clientButton_Click);
+            // 
+            // joinManualButton
+            // 
+            this.joinManualButton.BackColor = System.Drawing.Color.DimGray;
+            this.joinManualButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.joinManualButton.Location = new System.Drawing.Point(145, 157);
+            this.joinManualButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.joinManualButton.Name = "joinManualButton";
+            this.joinManualButton.Size = new System.Drawing.Size(74, 23);
+            this.joinManualButton.TabIndex = 13;
+            this.joinManualButton.Text = "IP入力";
+            this.joinManualButton.UseVisualStyleBackColor = false;
+            this.joinManualButton.Click += new System.EventHandler(this.joinManualButton_Click);
             // 
             // Mchan
             // 
@@ -231,6 +278,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
             this.ClientSize = new System.Drawing.Size(480, 297);
+            this.Controls.Add(this.offlineButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
@@ -265,6 +313,9 @@
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label createAtLabel;
+        private System.Windows.Forms.Button offlineButton;
+        private System.Windows.Forms.Button joinManualButton;
+        private System.Windows.Forms.Button clientButton;
     }
 }
 
