@@ -36,6 +36,7 @@
             // 
             // cancelButton
             // 
+            this.cancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cancelButton.Location = new System.Drawing.Point(67, 80);
@@ -44,11 +45,12 @@
             this.cancelButton.Size = new System.Drawing.Size(78, 23);
             this.cancelButton.TabIndex = 0;
             this.cancelButton.Text = "キャンセル";
-            this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.UseVisualStyleBackColor = false;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // OKButton
             // 
+            this.OKButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.OKButton.Location = new System.Drawing.Point(153, 80);
@@ -57,7 +59,7 @@
             this.OKButton.Size = new System.Drawing.Size(78, 23);
             this.OKButton.TabIndex = 1;
             this.OKButton.Text = "接続";
-            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.UseVisualStyleBackColor = false;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
             // ipInputBox

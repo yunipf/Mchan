@@ -519,6 +519,7 @@ namespace Mchan
         /// <param name="e"></param>
         private async void Mchan_Shown(object sender, EventArgs e)
         {
+            /*
             if (InitSetting)
             {
                 MessageBox.Show("Twitterアカウントを追加し、EfzRevivalフォルダを指定してください","初期設定",MessageBoxButtons.OK);
@@ -535,6 +536,7 @@ namespace Mchan
                 UserListUpdate();
             }
             userListPullDown.SelectedIndex = setting.UserListIndex;
+            */
 
             await GetIPAddress();
         }
@@ -727,6 +729,26 @@ namespace Mchan
             config.StartInfo.FileName = setting.EfzFolderPath + @"\config.exe";
             config.StartInfo.WorkingDirectory = setting.EfzFolderPath;
             config.Start();
+        }
+
+        private void Mchan_Load(object sender, EventArgs e)
+        {
+            if (InitSetting)
+            {
+                MessageBox.Show("Twitterアカウントを追加し、EfzRevivalフォルダを指定してください", "初期設定", MessageBoxButtons.OK);
+                ShowSettingDisplay();
+
+            }
+            else if (!System.IO.File.Exists(setting.EfzFolderPath + @"\EfzRevival.exe"))
+            {
+                MessageBox.Show("EfzRevival.exeが見つかりません");
+                ShowSettingDisplay();
+            }
+            else
+            {
+                UserListUpdate();
+            }
+            userListPullDown.SelectedIndex = setting.UserListIndex;
         }
     }
 

@@ -80,7 +80,7 @@ namespace Mchan
                     setting = (Setting)bf.Deserialize(fs);
                 }
             }
-            catch (System.IO.FileNotFoundException ex)
+            catch (System.IO.FileNotFoundException)
             {
                 setting = new Setting();
             }

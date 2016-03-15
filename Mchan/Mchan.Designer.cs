@@ -291,6 +291,7 @@
             this.Name = "Mchan";
             this.Text = "Mchan v0.1b";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Mchan_FormClosed);
+            this.Load += new System.EventHandler(this.Mchan_Load);
             this.Shown += new System.EventHandler(this.Mchan_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);

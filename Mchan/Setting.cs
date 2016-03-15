@@ -22,7 +22,7 @@ namespace Mchan
         {
             TimeSpan = TimeSpan.FromMinutes(180);
             EfzFolderPath = @"..\";
-            UserListIndex = -1;
+            UserListIndex = 0;
             IpAddress = "";
             Port = "";
         }
