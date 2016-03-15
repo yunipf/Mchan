@@ -422,8 +422,7 @@ namespace Mchan
             {
                 UPnPControlPoint p = new UPnPControlPoint();
                 var result = p.GetExternalIPAddress();
-
-                //Properties.Settings.Default.IPAddress = result;
+                
                 setting.IpAddress = result;
             });
 
@@ -438,7 +437,6 @@ namespace Mchan
                 try
                 {
                     using (System.IO.StreamReader sr = new System.IO.StreamReader(
-                    //efzDirectory + @"\EfzRevival.ini",
                     setting.EfzFolderPath + @"\EfzRevival.ini",
                     Encoding.UTF8))
                     {
@@ -460,7 +458,6 @@ namespace Mchan
                     match = regex.Match(result);
                     if (match.Success)
                     {
-                        //Properties.Settings.Default.Port = match.ToString();
                         setting.Port = match.ToString();
                     }
                 }
@@ -524,6 +521,7 @@ namespace Mchan
         {
             if (InitSetting)
             {
+                MessageBox.Show("Twitterアカウントを追加し、EfzRevivalフォルダを指定してください","初期設定",MessageBoxButtons.OK);
                 ShowSettingDisplay();
 
             }
@@ -592,37 +590,41 @@ namespace Mchan
         /// <param name="e"></param>
         private async void userListPullDown_TextChanged(object sender, EventArgs e)
         {
-            // トークンの作成
-            UserData user = (UserData)userListPullDown.SelectedItem;
-            string accessToken = user.AccessToken;
-            string accessTokenSecret = user.AccessTokenSecret;
-            var key = new KeyData();
-            string consumerKey = key.ConsumerKey;
-            string consumerSecret = key.ConsumerSecret;
-            tokens = Tokens.Create(consumerKey, consumerSecret, accessToken, accessTokenSecret);
-
-            try
+            if(!(userListPullDown.SelectedIndex == -1))
             {
-                var res = tokens.Account.VerifyCredentials();
-                tokens.ScreenName = res.ScreenName;
-                user.ScreenName = res.ScreenName;
-                user.Name = res.Name;
+                // トークンの作成
+                UserData user = (UserData)userListPullDown.SelectedItem;
+                string accessToken = user.AccessToken;
+                string accessTokenSecret = user.AccessTokenSecret;
+                var key = new KeyData();
+                string consumerKey = key.ConsumerKey;
+                string consumerSecret = key.ConsumerSecret;
+                tokens = Tokens.Create(consumerKey, consumerSecret, accessToken, accessTokenSecret);
 
-                DBAccess.DBUpdate(user);
-                userList = DBAccess.UserList;
+                try
+                {
+                    var res = tokens.Account.VerifyCredentials();
+                    tokens.ScreenName = res.ScreenName;
+                    user.ScreenName = res.ScreenName;
+                    user.Name = res.Name;
 
-                await StartAnalysis();
+                    DBAccess.DBUpdate(user);
+                    userList = DBAccess.UserList;
+
+                    await StartAnalysis();
+                }
+                catch (TwitterException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    MessageBox.Show("アプリ連携が解除されています。認証をやり直してください。");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                playerListBox.Focus();
             }
-            catch (TwitterException ex)
-            {
-                MessageBox.Show(ex.Message);
-                MessageBox.Show("アプリ連携が解除されています。認証をやり直してください。");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            playerListBox.Focus();
+            
         }
 
         /// <summary>

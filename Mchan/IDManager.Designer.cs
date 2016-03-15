@@ -204,7 +204,7 @@
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.ForeColor = System.Drawing.Color.White;
             this.Name = "IDManager";
-            this.Text = "アカウント管理";
+            this.Text = "設定";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.IDManager_FormClosing);
             this.Load += new System.EventHandler(this.IDManager_Load);
             this.tabControl1.ResumeLayout(false);
