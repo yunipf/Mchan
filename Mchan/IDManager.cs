@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Drawing;
 using CoreTweet;
 
 namespace Mchan
@@ -16,6 +17,7 @@ namespace Mchan
         public IDManager(string settingFile)
         {
             InitializeComponent();
+
             MaximizeBox = false;
             MinimizeBox = false;
 
@@ -45,11 +47,13 @@ namespace Mchan
         /// <param name="e"></param>
         private void IDManager_Load(object sender, EventArgs e)
         {
+
             efzPathText.Text = setting.EfzFolderPath;
             limitTimeBox.Text = setting.TimeSpan.TotalMinutes.ToString();
             ListBoxUpdate();
         }
 
+        
         /// <summary>
         /// 削除ボタン押下イベント
         /// </summary>
@@ -244,6 +248,8 @@ namespace Mchan
             SaveSetting();
             Close();
         }
+
+        
     }
     
 }
