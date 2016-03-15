@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using CoreTweet;
 using CoreTweet.Streaming;
 
@@ -26,16 +27,16 @@ namespace Mchan
         private Tokens tokens = null;
         private bool InitSetting = true;
 
+        private Setting setting = null;
+
         /* 設定項目 */
 
         // まっちんぐちゃんのUserId
         private long mchanUserId = 2905316520;
-        // プレイヤーの残存時間　180分
-        private TimeSpan timeSpan = TimeSpan.FromMinutes(180);
         // 取得ツイート数
         private int count = 20;
-        // EFZフォルダパス
-        private string efzFolderPath = @"F:\tasogare\EFZR\";
+        // 設定ファイル
+        private string settingFile = @"Setting";
 
         /// <summary>
         /// コンストラクタ
@@ -47,7 +48,9 @@ namespace Mchan
 
             InitFileCheck();
             InitSetting = InitSettingCheck();
-            
+            OpenSetting();
+
+
 
         }
 
@@ -80,7 +83,46 @@ namespace Mchan
             return bl;
         }
 
+        /// <summary>
+        /// 設定ファイルから設定クラス取得
+        /// </summary>
+        private void OpenSetting()
+        {
+            try
+            {
+                using (System.IO.FileStream fs = new System.IO.FileStream(settingFile, System.IO.FileMode.Open))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    setting = (Setting)bf.Deserialize(fs);
+                }
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                setting = new Setting();
+                SaveSetting();
+            }
+            
+        }
         
+        /// <summary>
+        /// 設定ファイルに保存
+        /// </summary>
+        private void SaveSetting()
+        {
+            try
+            {
+                using(System.IO.FileStream fs = new System.IO.FileStream(settingFile, System.IO.FileMode.Create))
+                {
+                    BinaryFormatter bf = new BinaryFormatter();
+                    bf.Serialize(fs, setting);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// 募集一覧の更新
@@ -135,7 +177,7 @@ namespace Mchan
             {
             playerDataList = new ConcurrentDictionary<string, PlayerData>();
 
-            var limitTime = DateTimeOffset.UtcNow - timeSpan;
+            var limitTime = DateTimeOffset.UtcNow - setting.TimeSpan;
                 var res = tokens.Statuses.UserTimeline(user_id => mchanUserId, count => this.count)
                 .Where((Status status) => status.CreatedAt > limitTime)
                 .OrderBy((Status status) => status.CreatedAt);
@@ -156,7 +198,7 @@ namespace Mchan
                 {
                     Task.WaitAll(Task.Delay(TimeSpan.FromMinutes(10)));
                     PlayerData removedValue;
-                    var limitTime = DateTimeOffset.UtcNow - timeSpan;
+                    var limitTime = DateTimeOffset.UtcNow - setting.TimeSpan;
                     var res = from dic in playerDataList
                               where dic.Value.CreateAt < limitTime
                               select dic.Key;
@@ -328,8 +370,7 @@ namespace Mchan
             userListPullDown.DataSource = userList.Values.ToList();
         }
 
-        
-        
+
 
         //using System.Runtime.InteropServices;
 
@@ -349,8 +390,8 @@ namespace Mchan
                 if (efzr == null)
                 {
                     efzr = new Process();
-                    efzr.StartInfo.FileName = efzFolderPath + @"\EfzRevival.exe";
-                    efzr.StartInfo.WorkingDirectory = efzFolderPath;
+                    efzr.StartInfo.FileName = setting.EfzFolderPath + @"\EfzRevival.exe";
+                    efzr.StartInfo.WorkingDirectory = setting.EfzFolderPath;
                     efzr.Start();
                 }
                 else if (efzr.HasExited)
@@ -382,7 +423,8 @@ namespace Mchan
                 UPnPControlPoint p = new UPnPControlPoint();
                 var result = p.GetExternalIPAddress();
 
-                Properties.Settings.Default.IPAddress = result;
+                //Properties.Settings.Default.IPAddress = result;
+                setting.IpAddress = result;
             });
 
             // EfzRevival.iniからポート番号抽出
@@ -396,7 +438,8 @@ namespace Mchan
                 try
                 {
                     using (System.IO.StreamReader sr = new System.IO.StreamReader(
-                    efzFolderPath + @"\EfzRevival.ini",
+                    //efzDirectory + @"\EfzRevival.ini",
+                    setting.EfzFolderPath + @"\EfzRevival.ini",
                     Encoding.UTF8))
                     {
                         while (!sr.EndOfStream)
@@ -417,7 +460,8 @@ namespace Mchan
                     match = regex.Match(result);
                     if (match.Success)
                     {
-                        Properties.Settings.Default.Port = match.ToString();
+                        //Properties.Settings.Default.Port = match.ToString();
+                        setting.Port = match.ToString();
                     }
                 }
                 catch (Exception ex)
@@ -432,10 +476,23 @@ namespace Mchan
             await combineTask;
         }
 
+        /// <summary>
+        /// 設定画面を開く。必ずこのメソッドを通して開くこと。
+        /// </summary>
+        private void ShowSettingDisplay()
+        {
+            DialogResult result = new IDManager(settingFile).ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                OpenSetting();
+                UserListUpdate();
+            }
+        }
+
 
         /* イベント */
 
-        
+
         /// <summary>
         /// クラ専募集ボタン押下イベント
         /// </summary>
@@ -467,12 +524,19 @@ namespace Mchan
         {
             if (InitSetting)
             {
-                new IDManager().ShowDialog();
+                ShowSettingDisplay();
 
             }
-
-            UserListUpdate();
-            userListPullDown.SelectedIndex = Properties.Settings.Default.UserListIndex;
+            else if (!System.IO.File.Exists(setting.EfzFolderPath + @"\EfzRevival.exe"))
+            {
+                MessageBox.Show("EfzRevival.exeが見つかりません");
+                ShowSettingDisplay();
+            }
+            else
+            {
+                UserListUpdate();
+            }
+            userListPullDown.SelectedIndex = setting.UserListIndex;
 
             await GetIPAddress();
         }
@@ -484,10 +548,10 @@ namespace Mchan
         /// <param name="e"></param>
         private void managerButton_Click(object sender, EventArgs e)
         {
-            new IDManager().ShowDialog();
-            UserListUpdate();
+            ShowSettingDisplay();
         }
 
+        
         /// <summary>
         /// メインフォームを終了したときのイベント
         /// </summary>
@@ -496,8 +560,9 @@ namespace Mchan
         private void Mchan_FormClosed(object sender, FormClosedEventArgs e)
         {
             int userListIndex = userListPullDown.SelectedIndex;
-            Properties.Settings.Default.UserListIndex = userListIndex;
-            Properties.Settings.Default.Save();
+
+            setting.UserListIndex = userListIndex;
+            SaveSetting();
         }
 
         /// <summary>
@@ -510,6 +575,14 @@ namespace Mchan
             var player = (PlayerData)playerListBox.SelectedItem;
             messageLabel.Text = player.Message;
             createAtLabel.Text = (player.CreateAt + TimeSpan.FromHours(9)).ToString("G");
+            if (player.ScreenName.Equals(tokens.ScreenName))
+            {
+                setButtonEnabled(false);
+            }
+            else
+            {
+                setButtonEnabled(true);
+            }
         }
 
         /// <summary>
@@ -572,8 +645,8 @@ namespace Mchan
         {
             var sd = (Button)sender;
             var result = new TweetDisplay(
-                Properties.Settings.Default.IPAddress + ":" +
-                Properties.Settings.Default.Port
+                setting.IpAddress + ":" +
+                setting.Port
                 , sd.Name
                 , tokens).ShowDialog();
 
@@ -639,6 +712,19 @@ namespace Mchan
             await EfzRun();
             SendKeys.Send("5");
 
+        }
+
+        /// <summary>
+        /// コンフィグボタン押下イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void configButton_Click(object sender, EventArgs e)
+        {
+            Process config = new Process();
+            config.StartInfo.FileName = setting.EfzFolderPath + @"\config.exe";
+            config.StartInfo.WorkingDirectory = setting.EfzFolderPath;
+            config.Start();
         }
     }
 

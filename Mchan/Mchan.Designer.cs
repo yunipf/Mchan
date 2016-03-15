@@ -41,9 +41,10 @@
             this.playerListBox = new System.Windows.Forms.ListBox();
             this.closeButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.offlineButton = new System.Windows.Forms.Button();
-            this.clientButton = new System.Windows.Forms.Button();
             this.joinManualButton = new System.Windows.Forms.Button();
+            this.clientButton = new System.Windows.Forms.Button();
+            this.offlineButton = new System.Windows.Forms.Button();
+            this.configButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -69,9 +70,9 @@
             this.managerButton.Location = new System.Drawing.Point(219, 8);
             this.managerButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.managerButton.Name = "managerButton";
-            this.managerButton.Size = new System.Drawing.Size(107, 23);
+            this.managerButton.Size = new System.Drawing.Size(54, 23);
             this.managerButton.TabIndex = 7;
-            this.managerButton.Text = "アカウント管理";
+            this.managerButton.Text = "設定";
             this.managerButton.UseVisualStyleBackColor = false;
             this.managerButton.Click += new System.EventHandler(this.managerButton_Click);
             // 
@@ -95,7 +96,6 @@
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Size = new System.Drawing.Size(204, 175);
             this.messageLabel.TabIndex = 8;
-            this.messageLabel.Text = "text";
             // 
             // hostButton
             // 
@@ -172,7 +172,6 @@
             this.createAtLabel.Name = "createAtLabel";
             this.createAtLabel.Size = new System.Drawing.Size(155, 27);
             this.createAtLabel.TabIndex = 13;
-            this.createAtLabel.Text = "text";
             this.createAtLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // playerListBox
@@ -183,19 +182,6 @@
             this.playerListBox.ForeColor = System.Drawing.Color.White;
             this.playerListBox.FormattingEnabled = true;
             this.playerListBox.ItemHeight = 16;
-            this.playerListBox.Items.AddRange(new object[] {
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "test",
-            "tst",
-            "tst",
-            "tst",
-            "sts",
-            "sts",
-            "sts"});
             this.playerListBox.Location = new System.Drawing.Point(7, 18);
             this.playerListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.playerListBox.Name = "playerListBox";
@@ -233,18 +219,18 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "募集一覧";
             // 
-            // offlineButton
+            // joinManualButton
             // 
-            this.offlineButton.BackColor = System.Drawing.Color.DimGray;
-            this.offlineButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.offlineButton.Location = new System.Drawing.Point(361, 8);
-            this.offlineButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.offlineButton.Name = "offlineButton";
-            this.offlineButton.Size = new System.Drawing.Size(107, 23);
-            this.offlineButton.TabIndex = 13;
-            this.offlineButton.Text = "オフライン起動";
-            this.offlineButton.UseVisualStyleBackColor = false;
-            this.offlineButton.Click += new System.EventHandler(this.offlineButton_Click);
+            this.joinManualButton.BackColor = System.Drawing.Color.DimGray;
+            this.joinManualButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.joinManualButton.Location = new System.Drawing.Point(145, 157);
+            this.joinManualButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.joinManualButton.Name = "joinManualButton";
+            this.joinManualButton.Size = new System.Drawing.Size(74, 23);
+            this.joinManualButton.TabIndex = 13;
+            this.joinManualButton.Text = "IP入力";
+            this.joinManualButton.UseVisualStyleBackColor = false;
+            this.joinManualButton.Click += new System.EventHandler(this.joinManualButton_Click);
             // 
             // clientButton
             // 
@@ -259,18 +245,31 @@
             this.clientButton.UseVisualStyleBackColor = false;
             this.clientButton.Click += new System.EventHandler(this.clientButton_Click);
             // 
-            // joinManualButton
+            // offlineButton
             // 
-            this.joinManualButton.BackColor = System.Drawing.Color.DimGray;
-            this.joinManualButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.joinManualButton.Location = new System.Drawing.Point(145, 157);
-            this.joinManualButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.joinManualButton.Name = "joinManualButton";
-            this.joinManualButton.Size = new System.Drawing.Size(74, 23);
-            this.joinManualButton.TabIndex = 13;
-            this.joinManualButton.Text = "IP入力";
-            this.joinManualButton.UseVisualStyleBackColor = false;
-            this.joinManualButton.Click += new System.EventHandler(this.joinManualButton_Click);
+            this.offlineButton.BackColor = System.Drawing.Color.DimGray;
+            this.offlineButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.offlineButton.Location = new System.Drawing.Point(374, 8);
+            this.offlineButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.offlineButton.Name = "offlineButton";
+            this.offlineButton.Size = new System.Drawing.Size(94, 23);
+            this.offlineButton.TabIndex = 13;
+            this.offlineButton.Text = "オフライン起動";
+            this.offlineButton.UseVisualStyleBackColor = false;
+            this.offlineButton.Click += new System.EventHandler(this.offlineButton_Click);
+            // 
+            // configButton
+            // 
+            this.configButton.BackColor = System.Drawing.Color.DimGray;
+            this.configButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.configButton.Location = new System.Drawing.Point(298, 8);
+            this.configButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.configButton.Name = "configButton";
+            this.configButton.Size = new System.Drawing.Size(68, 23);
+            this.configButton.TabIndex = 14;
+            this.configButton.Text = "コンフィグ";
+            this.configButton.UseVisualStyleBackColor = false;
+            this.configButton.Click += new System.EventHandler(this.configButton_Click);
             // 
             // Mchan
             // 
@@ -278,6 +277,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
             this.ClientSize = new System.Drawing.Size(480, 297);
+            this.Controls.Add(this.configButton);
             this.Controls.Add(this.offlineButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -289,7 +289,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "Mchan";
-            this.Text = "Mchan";
+            this.Text = "Mchan v0.1b";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Mchan_FormClosed);
             this.Shown += new System.EventHandler(this.Mchan_Shown);
             this.groupBox1.ResumeLayout(false);
@@ -316,6 +316,7 @@
         private System.Windows.Forms.Button offlineButton;
         private System.Windows.Forms.Button joinManualButton;
         private System.Windows.Forms.Button clientButton;
+        private System.Windows.Forms.Button configButton;
     }
 }
 

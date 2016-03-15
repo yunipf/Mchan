@@ -15,6 +15,7 @@ namespace Mchan
         public IPInputDisplay(string ip)
         {
             InitializeComponent();
+            
             ipInputBox.Text = ip;
         }
 
