@@ -676,7 +676,12 @@ namespace Mchan
                 await EfzRun();
                 SendKeys.Send("3");
             }
-
+            else if(result == DialogResult.Yes)
+            {
+                await EfzRun();
+                SendKeys.Send("4");
+            }
+            
         }
 
 

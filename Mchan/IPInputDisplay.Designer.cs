@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             this.cancelButton = new System.Windows.Forms.Button();
-            this.OKButton = new System.Windows.Forms.Button();
+            this.joinButton = new System.Windows.Forms.Button();
             this.ipInputBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.spectateButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cancelButton
@@ -39,7 +40,7 @@
             this.cancelButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cancelButton.Location = new System.Drawing.Point(67, 80);
+            this.cancelButton.Location = new System.Drawing.Point(14, 80);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(78, 23);
@@ -48,19 +49,19 @@
             this.cancelButton.UseVisualStyleBackColor = false;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // OKButton
+            // joinButton
             // 
-            this.OKButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
-            this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OKButton.Location = new System.Drawing.Point(153, 80);
-            this.OKButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(78, 23);
-            this.OKButton.TabIndex = 1;
-            this.OKButton.Text = "接続";
-            this.OKButton.UseVisualStyleBackColor = false;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            this.joinButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
+            this.joinButton.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.joinButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.joinButton.Location = new System.Drawing.Point(126, 80);
+            this.joinButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.joinButton.Name = "joinButton";
+            this.joinButton.Size = new System.Drawing.Size(48, 23);
+            this.joinButton.TabIndex = 1;
+            this.joinButton.Text = "乱入";
+            this.joinButton.UseVisualStyleBackColor = false;
+            this.joinButton.Click += new System.EventHandler(this.joinButton_Click);
             // 
             // ipInputBox
             // 
@@ -81,15 +82,30 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "IP:Port";
             // 
+            // spectateButton
+            // 
+            this.spectateButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
+            this.spectateButton.DialogResult = System.Windows.Forms.DialogResult.Yes;
+            this.spectateButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.spectateButton.Location = new System.Drawing.Point(182, 80);
+            this.spectateButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.spectateButton.Name = "spectateButton";
+            this.spectateButton.Size = new System.Drawing.Size(48, 23);
+            this.spectateButton.TabIndex = 4;
+            this.spectateButton.Text = "観戦";
+            this.spectateButton.UseVisualStyleBackColor = false;
+            this.spectateButton.Click += new System.EventHandler(this.spectateButton_Click);
+            // 
             // IPInputDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
             this.ClientSize = new System.Drawing.Size(243, 120);
+            this.Controls.Add(this.spectateButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ipInputBox);
-            this.Controls.Add(this.OKButton);
+            this.Controls.Add(this.joinButton);
             this.Controls.Add(this.cancelButton);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.ForeColor = System.Drawing.Color.White;
@@ -107,8 +123,9 @@
         #endregion
 
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.Button OKButton;
+        private System.Windows.Forms.Button joinButton;
         private System.Windows.Forms.TextBox ipInputBox;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button spectateButton;
     }
 }

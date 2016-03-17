@@ -166,16 +166,16 @@
             this.userListBox.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.userListBox.FormattingEnabled = true;
             this.userListBox.ItemHeight = 16;
-            this.userListBox.Location = new System.Drawing.Point(8, 41);
+            this.userListBox.Location = new System.Drawing.Point(12, 41);
             this.userListBox.Margin = new System.Windows.Forms.Padding(2);
             this.userListBox.Name = "userListBox";
-            this.userListBox.Size = new System.Drawing.Size(213, 146);
+            this.userListBox.Size = new System.Drawing.Size(236, 146);
             this.userListBox.TabIndex = 0;
             // 
             // deleteButton
             // 
             this.deleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.deleteButton.Location = new System.Drawing.Point(161, 205);
+            this.deleteButton.Location = new System.Drawing.Point(188, 206);
             this.deleteButton.Margin = new System.Windows.Forms.Padding(2);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(60, 23);
@@ -187,7 +187,7 @@
             // addUserButton
             // 
             this.addUserButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.addUserButton.Location = new System.Drawing.Point(122, 244);
+            this.addUserButton.Location = new System.Drawing.Point(149, 245);
             this.addUserButton.Name = "addUserButton";
             this.addUserButton.Size = new System.Drawing.Size(99, 23);
             this.addUserButton.TabIndex = 1;

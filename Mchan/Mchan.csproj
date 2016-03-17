@@ -214,8 +214,7 @@
     <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.99.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.99.0\build\net451\System.Data.SQLite.Core.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>"c:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe" /v4 /out:Mchanm.exe Mchan.exe CoreTweet.dll EntityFramework.dll EntityFramework.SqlServer.dll Newtonsoft.Json.dll System.Data.SQLite.dll System.Data.SQLite.EF6.dll System.Data.SQLite.Linq.dll System.Reactive.Core.dll System.Reactive.Interfaces.dll System.Reactive.Linq.dll System.Reactive.PlatformServices.dll</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

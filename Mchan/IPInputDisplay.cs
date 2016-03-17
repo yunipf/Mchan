@@ -19,14 +19,22 @@ namespace Mchan
             ipInputBox.Text = ip;
         }
 
-        private void OKButton_Click(object sender, EventArgs e)
+        private void joinButton_Click(object sender, EventArgs e)
         {
             Clipboard.SetDataObject(ipInputBox.Text, false);
             Dispose();           
         }
 
+
+
         private void cancelButton_Click(object sender, EventArgs e)
         {
+            Dispose();
+        }
+
+        private void spectateButton_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetDataObject(ipInputBox.Text, false);
             Dispose();
         }
     }
